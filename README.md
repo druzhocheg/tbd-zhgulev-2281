@@ -23,7 +23,7 @@ WHERE CAST(st.n_group AS varchar) LIKE '2%'
 3. Вывести всех студентов, отсортировать по убыванию номера группы и имени от а до я
 ```SQL
 SELECT * FROM students st
-ORDER BY st.n_group DESC, st.name
+ORDER BY st.n_group DESC, st.name ASC
 ```
 ![Задание 3](/%D0%9E%D0%B4%D0%BD%D0%BE%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D1%8B%D0%B5/ex_3.png)
 

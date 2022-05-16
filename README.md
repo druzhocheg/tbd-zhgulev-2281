@@ -246,3 +246,34 @@ GROUP BY n_group
 
 -----------------------
 <br><br>
+
+9. Вывести студента/ов, который/ые имеют наибольший балл в заданной группе
+```SQL
+SELECT st.*
+FROM (SELECT n_group, MAX(score) AS mx_score
+	  FROM students
+	GROUP BY n_group
+) res, students st	
+WHERE st.score = res.mx_score AND st.n_group = '1234'
+```
+
+![Задание 9](/%D0%93%D1%80%D1%83%D0%BF%D0%BF%D0%BE%D0%B2%D1%8B%D0%B5%20%D1%84%D1%83%D0%BD%D0%BA%D1%86%D0%B8%D0%B8/ex_9.png)
+
+-----------------------
+<br><br>
+
+
+10. Аналогично 9 заданию, но вывести в одном запросе для каждой группы студента с максимальным баллом.
+```SQL
+SELECT st.*
+FROM (SELECT n_group, MAX(score) AS mx_score
+	  FROM students
+	GROUP BY n_group
+) res, students st	
+WHERE res.n_group = st.n_group AND st.score = res.mx_score 
+```
+
+![Задание 10](/%D0%93%D1%80%D1%83%D0%BF%D0%BF%D0%BE%D0%B2%D1%8B%D0%B5%20%D1%84%D1%83%D0%BD%D0%BA%D1%86%D0%B8%D0%B8/ex_10.png)
+
+-----------------------
+<br><br>

@@ -278,3 +278,43 @@ WHERE res.n_group = st.n_group AND st.score = res.mx_score
 
 -----------------------
 <br><br>
+
+# Многотабличные запросы
+1. Вывести все имена и фамилии студентов, и название хобби, которым занимается этот студент.
+
+```SQL
+SELECT 
+  st.name, st.surname, h.name 
+FROM students st, students_hobbies sth, hobbies h 
+WHERE 
+  st.id = sth.id AND 
+  sth.hobby_id = h.id AND 
+  sth.date_finish IS NULL
+
+
+```
+![Задание 1](/Multi/ex_1.png)
+
+-----------------------
+<br><br>
+
+2. Вывести информацию о студенте, занимающимся хобби самое продолжительное время
+
+```SQL
+SELECT st.id, st.name, st.surname, st.n_group,
+	CASE
+		WHEN st_h.date_finish IS NULL THEN (CURRENT_DATE-st_h.date_start)
+		WHEN st_h.date_finish IS NOT NULL THEN st_h.date_finish - st_h.date_start
+	END as hobby_day
+
+FROM students_hobbies st_h, students st
+WHERE st_h.students_id = st.id
+ORDER BY hobby_day DESC
+LIMIT 1
+
+
+```
+![Задание 2](/Multi/ex_2.png)
+
+-----------------------
+<br><br>

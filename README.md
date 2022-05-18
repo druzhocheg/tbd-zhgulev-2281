@@ -5,7 +5,7 @@
 SELECT * FROM students
 WHERE score >= 4 and score <= 4.5
 ```
-![Задание 1](/%D0%9E%D0%B4%D0%BD%D0%BE%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D1%8B%D0%B5/ex_1.png)
+![Задание 1](/Single/ex_1.png)
 
 -----------------------
 <br><br>
@@ -13,9 +13,9 @@ WHERE score >= 4 and score <= 4.5
 2. Познакомиться с функцией CAST. Вывести при помощи неё студентов заданного курса (использовать Like)
 ```SQL
 SELECT * FROM students st
-WHERE CAST(st.n_group AS varchar) LIKE '2%'
+WHERE CAST(st.n_group AS varchar) LIKE '3%'
 ```
-![Задание 2](/%D0%9E%D0%B4%D0%BD%D0%BE%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D1%8B%D0%B5/ex_2.png)
+![Задание 2](/Single/ex_2.png)
 
 -----------------------
 <br><br>
@@ -25,7 +25,7 @@ WHERE CAST(st.n_group AS varchar) LIKE '2%'
 SELECT * FROM students st
 ORDER BY st.n_group DESC, st.name ASC
 ```
-![Задание 3](/%D0%9E%D0%B4%D0%BD%D0%BE%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D1%8B%D0%B5/ex_3.png)
+![Задание 3](/Single/ex_3.png)
 
 -----------------------
 <br><br>
@@ -37,7 +37,7 @@ FROM students st
 WHERE st.score >= 4
 ORDER BY score DESC
 ```
-![Задание 4](/%D0%9E%D0%B4%D0%BD%D0%BE%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D1%8B%D0%B5/ex_4.png)
+![Задание 4](/Single/ex_4.png)
 
 -----------------------
 <br><br>
@@ -48,7 +48,7 @@ SELECT * FROM hobbies  hb
 WHERE hb.name = 'Хоккей' OR hb.name = 'Футбол'
 ```
 
-![Задание 5](/%D0%9E%D0%B4%D0%BD%D0%BE%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D1%8B%D0%B5/ex_5.png)
+![Задание 5](/Single/ex_5.png)
 
 -----------------------
 <br><br>
@@ -63,7 +63,7 @@ WHERE (CAST(st.date_start as varchar) LIKE '201%' or
 	date_finish is null
 ```
 
-![Задание 6](/%D0%9E%D0%B4%D0%BD%D0%BE%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D1%8B%D0%B5/ex_6.png)
+![Задание 6](/Single/ex_6.png)
 
 -----------------------
 <br><br>
@@ -77,7 +77,7 @@ WHERE st.score > 4.5
 ORDER BY st.score DESC
 ```
 
-![Задание 7](/%D0%9E%D0%B4%D0%BD%D0%BE%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D1%8B%D0%B5/ex_7.png)
+![Задание 7](/Single/ex_7.png)
 
 -----------------------
 <br><br>
@@ -92,7 +92,7 @@ ORDER BY st.score DESC
 LIMIT 5
 ```
 
-![Задание 8](/%D0%9E%D0%B4%D0%BD%D0%BE%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D1%8B%D0%B5/ex_8.png)
+![Задание 8](/Single/ex_8.png)
 
 -----------------------
 <br><br>
@@ -112,7 +112,7 @@ END
 FROM hobbies h
 ```
 
-![Задание 9](/%D0%9E%D0%B4%D0%BD%D0%BE%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D1%8B%D0%B5/ex_9.png)
+![Задание 9](/Single/ex_9.png)
 
 -----------------------
 <br><br>
@@ -124,7 +124,7 @@ ORDER BY risk DESC
 LIMIT 3
 ```
 
-![Задание 10](/%D0%9E%D0%B4%D0%BD%D0%BE%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D1%8B%D0%B5/ex_10.png)
+![Задание 10](/Single/ex_10.png)
 
 -----------------------
 <br><br>

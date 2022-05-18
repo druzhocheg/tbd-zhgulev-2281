@@ -144,7 +144,7 @@ GROUP BY n_group
 ORDER BY n_group DESC;
 ```
 
-![Задание 1](/%D0%93%D1%80%D1%83%D0%BF%D0%BF%D0%BE%D0%B2%D1%8B%D0%B5%20%D1%84%D1%83%D0%BD%D0%BA%D1%86%D0%B8%D0%B8/ex_1.png)
+![Задание 1](/Group/ex_1.png)
 
 -----------------------
 <br><br>
@@ -158,7 +158,7 @@ GROUP BY n_group
 ORDER BY n_group DESC;
 ```
 
-![Задание 2](/%D0%93%D1%80%D1%83%D0%BF%D0%BF%D0%BE%D0%B2%D1%8B%D0%B5%20%D1%84%D1%83%D0%BD%D0%BA%D1%86%D0%B8%D0%B8/ex_2.png)
+![Задание 2](/Group/ex_2.png)
 
 -----------------------
 <br><br>
@@ -172,7 +172,7 @@ GROUP BY surname
 ORDER BY surname ASC;
 ```
 
-![Задание 3](/%D0%93%D1%80%D1%83%D0%BF%D0%BF%D0%BE%D0%B2%D1%8B%D0%B5%20%D1%84%D1%83%D0%BD%D0%BA%D1%86%D0%B8%D0%B8/ex_3.png)
+![Задание 3](/Group/ex_3.png)
 
 -----------------------
 <br><br>
@@ -185,7 +185,7 @@ GROUP BY years
 ORDER BY years ASC;
 ```
 
-![Задание 4](/%D0%93%D1%80%D1%83%D0%BF%D0%BF%D0%BE%D0%B2%D1%8B%D0%B5%20%D1%84%D1%83%D0%BD%D0%BA%D1%86%D0%B8%D0%B8/ex_4.png)
+![Задание 4](/Group/ex_4.png)
 
 -----------------------
 <br><br>
@@ -198,7 +198,7 @@ GROUP BY course
 ORDER BY course ASC;
 ```
 
-![Задание 5](/%D0%93%D1%80%D1%83%D0%BF%D0%BF%D0%BE%D0%B2%D1%8B%D0%B5%20%D1%84%D1%83%D0%BD%D0%BA%D1%86%D0%B8%D0%B8/ex_5.png)
+![Задание 5](/Group/ex_5.png)
 
 -----------------------
 <br><br>
@@ -213,7 +213,7 @@ ORDER BY AVG(score) DESC
 LIMIT 1
 ```
 
-![Задание 6](/%D0%93%D1%80%D1%83%D0%BF%D0%BF%D0%BE%D0%B2%D1%8B%D0%B5%20%D1%84%D1%83%D0%BD%D0%BA%D1%86%D0%B8%D0%B8/ex_6.png)
+![Задание 6](/Group/ex_6.png)
 
 -----------------------
 <br><br>
@@ -228,7 +228,7 @@ HAVING AVG(score) <= 3.5
 ORDER BY stud_avg_score ASC
 ```
 
-![Задание 7](/%D0%93%D1%80%D1%83%D0%BF%D0%BF%D0%BE%D0%B2%D1%8B%D0%B5%20%D1%84%D1%83%D0%BD%D0%BA%D1%86%D0%B8%D0%B8/ex_7.png)
+![Задание 7](/Group/ex_7.png)
 
 -----------------------
 <br><br>
@@ -242,7 +242,7 @@ FROM students
 GROUP BY n_group
 ```
 
-![Задание 8](/%D0%93%D1%80%D1%83%D0%BF%D0%BF%D0%BE%D0%B2%D1%8B%D0%B5%20%D1%84%D1%83%D0%BD%D0%BA%D1%86%D0%B8%D0%B8/ex_8.png)
+![Задание 8](/Group/ex_8.png)
 
 -----------------------
 <br><br>
@@ -254,10 +254,11 @@ FROM (SELECT n_group, MAX(score) AS mx_score
 	  FROM students
 	GROUP BY n_group
 ) res, students st	
-WHERE st.score = res.mx_score AND st.n_group = '1234'
+WHERE st.score = res.mx_score AND st.n_group = '3046'
+LIMIT 1
 ```
 
-![Задание 9](/%D0%93%D1%80%D1%83%D0%BF%D0%BF%D0%BE%D0%B2%D1%8B%D0%B5%20%D1%84%D1%83%D0%BD%D0%BA%D1%86%D0%B8%D0%B8/ex_9.png)
+![Задание 9](/Group/ex_9.png)
 
 -----------------------
 <br><br>
@@ -273,7 +274,7 @@ FROM (SELECT n_group, MAX(score) AS mx_score
 WHERE res.n_group = st.n_group AND st.score = res.mx_score 
 ```
 
-![Задание 10](/%D0%93%D1%80%D1%83%D0%BF%D0%BF%D0%BE%D0%B2%D1%8B%D0%B5%20%D1%84%D1%83%D0%BD%D0%BA%D1%86%D0%B8%D0%B8/ex_10.png)
+![Задание 10](/Group/ex_10.png)
 
 -----------------------
 <br><br>

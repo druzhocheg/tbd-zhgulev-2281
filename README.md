@@ -376,83 +376,363 @@ WHERE st.id = pod.students_id AND extract(year from age(CURRENT_TIMESTAMP,date_b
 
 
 ```
-![Задание 5](/Multi/ex_5.png)
-
+![](/Multi/ex_5.png)
 -----------------------
 <br><br>
 
 6. Найти средний балл в каждой группе, учитывая только баллы студентов, которые имеют хотя бы одно действующее хобби.
 
 ```SQL
-SELECT st.surname, st.name, st.id, st.date_birth 
-FROM students st, (
-	SELECT st_h.students_id, COUNT(st_h.hobby_id)
-	FROM students_hobbies st_h
-	GROUP BY st_h.students_id 
-	HAVING COUNT(st_h.hobby_id) > 1
-) pod
-WHERE st.id = pod.students_id AND extract(year from age(CURRENT_TIMESTAMP,date_birth)) > 19
+SELECT st.n_group, ROUND(AVG(st.score),2)
+FROM students st
+INNER JOIN
+  (SELECT *
+    FROM students_hobbies st_h
+    WHERE st_h.date_finish IS NULL) cr_h
+ON st.id = cr_h.id
+GROUP BY st.n_group
 
 
 ```
-![Задание 5](/Multi/ex_5.png)
+![](/Multi/ex_6.png)
+-----------------------
+<br><br>
+
+7. Найти название, риск, длительность в месяцах самого продолжительного хобби из действующих, указав номер зачетки студента.
+
+```SQL
+SELECT h.name, h.risk, pod.months, pod.id
+FROM hobbies h
+INNER JOIN (
+	SELECT pod.hobby_id , st.id, pod.months
+	FROM students st, (
+		SELECT st_h.hobby_id ,st_h.students_id, 12 * extract(year from age(CURRENT_TIMESTAMP, st_h.date_start)) as months
+		FROM students_hobbies st_h
+		WHERE st_h.date_finish IS NULL
+		ORDER BY months DESC
+		LIMIT 1
+	) pod
+	WHERE st.id = pod.students_id
+) pod on pod.hobby_id = h.id
+
+
+```
+![](/Multi/ex_7.png)
 
 -----------------------
 <br><br>
 
-7.
+8. Найти все хобби, которыми увлекаются студенты, имеющие максимальный балл.
+
 
 ```SQL
-SELECT st.surname, st.name, st.id, st.date_birth 
-FROM students st, (
-	SELECT st_h.students_id, COUNT(st_h.hobby_id)
-	FROM students_hobbies st_h
-	GROUP BY st_h.students_id 
-	HAVING COUNT(st_h.hobby_id) > 1
-) pod
-WHERE st.id = pod.students_id AND extract(year from age(CURRENT_TIMESTAMP,date_birth)) > 19
-
+SELECT h.* FROM students st
+INNER JOIN students_hobbies st_h
+ON st_h.id = st.id
+INNER JOIN hobbies h
+ON st_h.hobby_id = h.id
+WHERE 
+  st.score = (SELECT st.score
+  FROM students st
+  GROUP BY st.score
+  ORDER BY st.score DESC
+  LIMIT 1)
 
 ```
-![Задание 5](/Multi/ex_5.png)
+![](/Multi/ex_8.png)
 
 -----------------------
 <br><br>
 
-8.
+9. Найти все действующие хобби, которыми увлекаются троечники 2-го курса.
 
 ```SQL
-SELECT st.surname, st.name, st.id, st.date_birth 
-FROM students st, (
-	SELECT st_h.students_id, COUNT(st_h.hobby_id)
-	FROM students_hobbies st_h
-	GROUP BY st_h.students_id 
-	HAVING COUNT(st_h.hobby_id) > 1
-) pod
-WHERE st.id = pod.students_id AND extract(year from age(CURRENT_TIMESTAMP,date_birth)) > 19
-
+SELECT h.name FROM students st
+INNER JOIN students_hobbies st_h
+ON st_h.id = st.id
+INNER JOIN hobbies h
+ON st_h.hobby_id = h.id
+WHERE 
+  cast(st.n_group as varchar) LIKE '2%' AND 
+  st.score >= 2.5 AND 
+  st.score <= 4.0 AND
+  st_h.date_finish IS NULL
 
 ```
-![Задание 5](/Multi/ex_5.png)
+![](/Multi/ex_9.png)
 
 -----------------------
 <br><br>
 
-9.
+10. Найти номера курсов, на которых более 50% студентов имеют более одного действующего хобби.
 
 ```SQL
-SELECT st.surname, st.name, st.id, st.date_birth 
-FROM students st, (
-	SELECT st_h.students_id, COUNT(st_h.hobby_id)
-	FROM students_hobbies st_h
-	GROUP BY st_h.students_id 
-	HAVING COUNT(st_h.hobby_id) > 1
-) pod
-WHERE st.id = pod.students_id AND extract(year from age(CURRENT_TIMESTAMP,date_birth)) > 19
-
 
 ```
-![Задание 5](/Multi/ex_5.png)
+
+
+-----------------------
+<br><br>
+
+11. Вывести номера групп, в которых не менее 60% студентов имеют балл не ниже 4
+
+```SQL
+SELECT sub.n_group
+FROM
+  (SELECT 
+    st.n_group, 
+    COUNT(st.id) total_count, 
+    COUNT(st.score) FILTER (WHERE st.score > 4) above_score_count
+  FROM students st
+  GROUP BY st.n_group) sub
+WHERE sub.total_count*0.6 < above_score_count
+```
+![](/Multi/ex_11.png)
+
+-----------------------
+<br><br>
+
+12.Для каждого курса подсчитать количество различных действующих хобби на курсе.
+
+```SQL
+SELECT LEFT(st.n_group::VARCHAR,1) course, COUNT(DISTINCT h.id) count_dif
+FROM students st
+INNER JOIN students_hobbies st_h
+ON st_h.id = st.id
+INNER JOIN hobbies h
+ON st_h.hobby_id = h.id
+GROUP BY LEFT(st.n_group::VARCHAR,1)
+```
+![](/Multi/ex_12.png)
+
+-----------------------
+<br><br>
+
+13. Вывести номер зачётки, фамилию и имя, дату рождения и номер курса для всех отличников, не имеющих хобби. Отсортировать данные по возрастанию в пределах курса по убыванию даты рождения.
+
+```SQL
+SELECT st.id, st.name, st.surname, st.date_birth, 
+	LEFT(st.n_group::VARCHAR,1) course
+FROM students st
+WHERE 
+  st.score >= 4.5 AND
+  st.id IN
+    (SELECT st_h.id
+    FROM students_hobbies st_h
+    GROUP BY st_h.id
+    HAVING COUNT(st_h.date_finish) = COUNT(st_h.date_start))
+ORDER BY
+  LEFT(st.n_group::VARCHAR,1),
+  st.date_birth DESC
+
+```
+![](/Multi/ex_13.png)
+
+-----------------------
+<br><br>
+
+14. Создать представление, в котором отображается вся информация о студентах, которые продолжают заниматься хобби в данный момент и занимаются им как минимум 5 лет.
+
+```SQL
+CREATE OR REPLACE VIEW hobby_more5years AS
+SELECT st.*
+FROM students st
+INNER JOIN students_hobbies st_h
+ON st_h.id = st.id
+WHERE
+  st_h.date_finish IS NULL AND
+  EXTRACT(YEAR FROM AGE(NOW(),st_h.date_start)) >= 5
+
+```
+![](/Multi/ex_14.png)
+
+-----------------------
+<br><br>
+
+15. Для каждого хобби вывести количество людей, которые им занимаются.
+
+```SQL
+SELECT h.name, COUNT(DISTINCT st_h.id) students
+FROM hobbies h
+INNER JOIN students_hobbies st_h
+ON h.id = st_h.hobby_id
+GROUP BY h.name
+
+```
+![](/Multi/ex_15.png)
+
+-----------------------
+<br><br>
+
+16. Вывести ИД самого популярного хобби.
+
+```SQL
+SELECT st_h.hobby_id
+FROM students_hobbies st_h
+GROUP BY hobby_id
+ORDER BY COUNT(st_h.students_id) DESC
+LIMIT 1
+
+```
+![](/Multi/ex_16.png)
+
+-----------------------
+<br><br>
+
+17. Вывести всю информацию о студентах, занимающихся самым популярным хобби.
+
+```SQL
+SELECT st.*
+FROM students st
+INNER JOIN students_hobbies st_h
+ON st.id = st_h.id
+WHERE
+  st_h.hobby_id = (SELECT st_h.hobby_id
+    FROM students_hobbies st_h
+    GROUP BY st_h.hobby_id
+    ORDER BY COUNT(st_h.id) DESC
+    LIMIT 1) AND
+  st_h.date_finish IS NULL
+
+```
+![](/Multi/ex_17.png)
+
+-----------------------
+<br><br>
+
+18. Вывести ИД 3х хобби с максимальным риском.
+
+```SQL
+CREATE OR REPLACE VIEW hobby_top3 AS
+SELECT h.id
+FROM hobbies h
+ORDER BY h.risk DESC
+LIMIT 3
+
+```
+![](/Multi/ex_18.png)
+
+-----------------------
+<br><br>
+
+19. Вывести 10 студентов, которые занимаются одним (или несколькими) хобби самое продолжительно время.
+
+```SQL
+SELECT st_h.students_id
+FROM students_hobbies st_h
+ORDER BY age(st_h.date_finish, st_h.date_start) DESC
+LIMIT 10
+```
+![](/Multi/ex_19.png)
+
+-----------------------
+<br><br>
+
+20. Вывести номера групп (без повторений), в которых учатся студенты из предыдущего запроса.
+
+```SQL
+SELECT DISTINCT st.n_group
+FROM students st, (
+	SELECT st_h.students_id
+	FROM students_hobbies st_h
+	ORDER BY age(st_h.date_finish, st_h.date_start) DESC
+	LIMIT 10
+) res
+WHERE st.id = res.students_id
+```
+![](/Multi/ex_20.png)
+
+-----------------------
+<br><br>
+
+21. Создать представление, которое выводит номер зачетки, имя и фамилию студентов, отсортированных по убыванию среднего балла.
+
+```SQL
+CREATE OR REPLACE VIEW students_top AS
+SELECT st.id, st.name, st.surname
+FROM students st
+ORDER BY st.score DESC
+```
+![](/Multi/ex_21.png)
+
+-----------------------
+<br><br>
+
+22. Представление: найти каждое популярное хобби на каждом курсе.
+
+```SQL
+CREATE OR REPLACE VIEW corse_top_pop AS
+SELECT DISTINCT ON (1) substr(st.n_group::varchar,1,1), COUNT(st_h.hobby_id) hobby_count, st_h.hobby_id
+FROM students st
+INNER JOIN students_hobbies st_h ON st_h.students_id = st.id
+GROUP BY substr(st.n_group::varchar,1,1), st_h.hobby_id
+ORDER BY substr(st.n_group::varchar,1,1) DESC, hobby_count DESC
+```
+![](/Multi/ex_22.png)
+
+-----------------------
+<br><br>
+
+23. Представление: найти хобби с максимальным риском среди самых популярных хобби на 2 курсе.
+
+```SQL
+CREATE OR REPLACE VIEW top_risk_h_2ndcourse AS
+SELECT *
+FROM hobbies h
+WHERE h.id
+IN
+  (SELECT h.id
+  FROM students st
+  INNER JOIN students_hobbies st_h
+  ON st.id = st_h.id
+  INNER JOIN hobbies h
+  ON st_h.hobby_id = h.id
+  WHERE LEFT(st.n_group::VARCHAR,1) = '2'
+  GROUP BY h.id
+  ORDER BY COUNT(h.id))
+ORDER BY h.risk DESC
+LIMIT 1
+```
+![](/Multi/ex_23.png)
+
+-----------------------
+<br><br>
+
+24. Представление: для каждого курса подсчитать количество студентов на курсе и количество отличников.
+
+```SQL
+CREATE OR REPLACE VIEW count_ideal_st AS
+SELECT 
+  LEFT(st.n_group::VARCHAR,1) course, 
+  COUNT(st.id) total, 
+  COUNT(st.id) FILTER (WHERE st.score >= 4.5) ideal_student
+FROM students st
+GROUP BY LEFT(st.n_group::VARCHAR,1)
+```
+![](/Multi/ex_24.png)
+
+-----------------------
+<br><br>
+
+25. Представление: самое популярное хобби среди всех студентов.
+
+```SQL
+CREATE OR REPLACE VIEW top_h AS
+SELECT *
+FROM hobbies h
+WHERE 
+  h.id = 
+    (SELECT h.id
+    FROM students st
+    INNER JOIN students_hobbies st_h
+    ON st.id = st_h.id
+    INNER JOIN hobbies h
+    ON st_h.hobby_id = h.id
+    GROUP BY h.id
+    ORDER BY COUNT(h.id) DESC
+    LIMIT 1)
+```
+![](/Multi/ex_25.png)
 
 -----------------------
 <br><br>

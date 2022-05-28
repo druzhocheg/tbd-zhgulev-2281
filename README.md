@@ -318,3 +318,141 @@ LIMIT 1
 
 -----------------------
 <br><br>
+
+3. Вывести имя, фамилию, номер зачетки и дату рождения для студентов, средний балл которых выше среднего, а сумма риска всех хобби, которыми он занимается в данный момент, больше 5
+
+```SQL
+SELECT st.name, st.surname, st.id, st.date_birth
+	FROM students st,
+  	(SELECT st_h.id, SUM(h.risk)
+		FROM hobbies h
+		INNER JOIN students_hobbies st_h
+		ON h.id = st_h.hobby_id
+		GROUP BY st_h.id
+		HAVING SUM(h.risk) > 5) h_risk
+WHERE 
+	st.score > (SELECT ROUND(AVG(st.score),2) FROM students st) 
+	AND h_risk.id = st.id
+
+
+```
+![Задание 3](/Multi/ex_3.png)
+
+-----------------------
+<br><br>
+
+4. Вывести фамилию, имя, зачетку, дату рождения, название хобби и длительность в месяцах, для всех завершенных хобби.
+
+```SQL
+SELECT st.id, st.name, st.surname, st.date_birth, h.name, st_h.do_time FROM students st 
+INNER JOIN 
+  (SELECT 
+    st_h.id, 
+    st_h.hobby_id,
+    st_h.date_finish - st_h.date_start do_time 
+  FROM students_hobbies st_h 
+  WHERE st_h.date_finish - st_h.date_start IS NOT NULL) st_h 
+ON st.id = st_h.id
+INNER JOIN hobbies h
+ON st_h.hobby_id = h.id
+
+```
+![Задание 4](/Multi/ex_4.png)
+
+-----------------------
+<br><br>
+
+5. Вывести фамилию, имя, зачетку, дату рождения студентов, которым исполнилось N полных лет на текущую дату, и которые имеют более 1 действующего хобби.
+
+```SQL
+SELECT st.surname, st.name, st.id, st.date_birth 
+FROM students st, (
+	SELECT st_h.students_id, COUNT(st_h.hobby_id)
+	FROM students_hobbies st_h
+	GROUP BY st_h.students_id 
+	HAVING COUNT(st_h.hobby_id) > 1
+) pod
+WHERE st.id = pod.students_id AND extract(year from age(CURRENT_TIMESTAMP,date_birth)) > 19
+
+
+```
+![Задание 5](/Multi/ex_5.png)
+
+-----------------------
+<br><br>
+
+6. Найти средний балл в каждой группе, учитывая только баллы студентов, которые имеют хотя бы одно действующее хобби.
+
+```SQL
+SELECT st.surname, st.name, st.id, st.date_birth 
+FROM students st, (
+	SELECT st_h.students_id, COUNT(st_h.hobby_id)
+	FROM students_hobbies st_h
+	GROUP BY st_h.students_id 
+	HAVING COUNT(st_h.hobby_id) > 1
+) pod
+WHERE st.id = pod.students_id AND extract(year from age(CURRENT_TIMESTAMP,date_birth)) > 19
+
+
+```
+![Задание 5](/Multi/ex_5.png)
+
+-----------------------
+<br><br>
+
+7.
+
+```SQL
+SELECT st.surname, st.name, st.id, st.date_birth 
+FROM students st, (
+	SELECT st_h.students_id, COUNT(st_h.hobby_id)
+	FROM students_hobbies st_h
+	GROUP BY st_h.students_id 
+	HAVING COUNT(st_h.hobby_id) > 1
+) pod
+WHERE st.id = pod.students_id AND extract(year from age(CURRENT_TIMESTAMP,date_birth)) > 19
+
+
+```
+![Задание 5](/Multi/ex_5.png)
+
+-----------------------
+<br><br>
+
+8.
+
+```SQL
+SELECT st.surname, st.name, st.id, st.date_birth 
+FROM students st, (
+	SELECT st_h.students_id, COUNT(st_h.hobby_id)
+	FROM students_hobbies st_h
+	GROUP BY st_h.students_id 
+	HAVING COUNT(st_h.hobby_id) > 1
+) pod
+WHERE st.id = pod.students_id AND extract(year from age(CURRENT_TIMESTAMP,date_birth)) > 19
+
+
+```
+![Задание 5](/Multi/ex_5.png)
+
+-----------------------
+<br><br>
+
+9.
+
+```SQL
+SELECT st.surname, st.name, st.id, st.date_birth 
+FROM students st, (
+	SELECT st_h.students_id, COUNT(st_h.hobby_id)
+	FROM students_hobbies st_h
+	GROUP BY st_h.students_id 
+	HAVING COUNT(st_h.hobby_id) > 1
+) pod
+WHERE st.id = pod.students_id AND extract(year from age(CURRENT_TIMESTAMP,date_birth)) > 19
+
+
+```
+![Задание 5](/Multi/ex_5.png)
+
+-----------------------
+<br><br>
